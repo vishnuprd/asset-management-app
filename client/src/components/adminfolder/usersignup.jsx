@@ -1,18 +1,9 @@
 import React from "react";
 import Login from "../../assests/login.png";
 import { useNavigate } from "react-router-dom";
-
-export default function Loginpage() {
+import Company from "../../assests/company.png"
+export default function Usersignup() {
     const navigate = useNavigate();
-
-    const handleLoginPage = () => {
-        if (formData.username && formData.email && formData.password) {
-            navigate("/user/signup"); 
-        } else {
-            alert("Please fill in all fields");
-        }
-        
-    };
 
     const [formData, setFormData] = React.useState({
         email: '',
@@ -41,7 +32,6 @@ export default function Loginpage() {
                     password: formData.password,
                 }),
             });
-
             if (!response.ok) {
                 throw new Error('Registration failed');
             } else {
@@ -71,6 +61,7 @@ export default function Loginpage() {
                     </div>
                     <div className="w-1/2 ">
                         <form className="flex flex-col items-center w-[350px]" onSubmit={handleSubmit}>
+                        <img src={Company} alt="Sample" className="w-[100px]" />
                             <p className="text-2xl font-bold mb-4">Log In Into Your Account</p>
                             <input
                                 type="email"
@@ -99,7 +90,7 @@ export default function Loginpage() {
                                 onChange={handleChange}
                                 required
                             />
-                            <button onClick={handleLoginPage} type="submit" className="w-full px-6 py-2 mb-4 bg-grey-500 hover:bg-grey-600 text-black font-bold rounded">
+                            <button type="submit" className="w-full px-6 py-2 mb-4 font-bold text-white rounded btn btn-neutral bg-grey-500 hover:bg-grey-600">
                                 <strong>Submit</strong>
                             </button>
                             <div></div>
