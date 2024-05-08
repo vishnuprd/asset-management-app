@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
+      const response = await fetch(${process.env.REACT_APP_API_URL}/users, {
         headers: {
           Authorization:
             'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
@@ -73,25 +73,36 @@ export default function Dashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await postAsset({
-      userId: newAsset.employeeId,
-      name: newAsset.name,
-      description: newAsset.description,
-      category: newAsset.category,
-    });
-    setTableData([...tableData, newAsset]);
-    setNewAsset({
-      employeeId: '',
-      name: '',
-      description: '',
-      category: '',
-    });
-    setShowForm(false);
+    console.log('newAsset', newAsset);
+    if (
+      newAsset.employeeId !== '' &&
+      newAsset.employeeId !== 0 &&
+      newAsset.name &&
+      newAsset.description &&
+      newAsset.category
+    ) {
+      await postAsset({
+        userId: newAsset.employeeId,
+        name: newAsset.name,
+        description: newAsset.description,
+        category: newAsset.category,
+      });
+      setTableData([...tableData, newAsset]);
+      setNewAsset({
+        employeeId: '',
+        name: '',
+        description: '',
+        category: '',
+      });
+      setShowForm(false);
+    } else {
+      alert('Please fill all fields');
+    }
   };
 
   const getAssets = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/assets`, {
+      const response = await fetch(${process.env.REACT_APP_API_URL}/assets, {
         headers: {
           Authorization:
             'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
@@ -110,7 +121,7 @@ export default function Dashboard() {
   const postAsset = async (payload) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/assets/create`,
+        ${process.env.REACT_APP_API_URL}/assets/create,
         {
           method: 'POST',
           headers: {
@@ -198,7 +209,7 @@ export default function Dashboard() {
                                 onChange={handleChange}
                                 value={newAsset.employeeId}
                               >
-                                <option disabled selected>
+                                <option value={0} selected>
                                   Select Employee
                                 </option>
                                 {usersForAdmin.map((user, index) => (
