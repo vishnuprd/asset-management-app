@@ -6,17 +6,20 @@ const routes = [
     path: '/dashboard',
     label: 'Dashboard',
     icon: 'bx bxs-dashboard',
+    role: ['admin', 'user'],
   },
   {
-    path: '/User',
+    path: '/user',
     label: 'User',
     icon: 'bx bxs-contact',
+    role: ['admin'],
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ user }) {
   const location = useLocation();
-  console.log('location', location);
+
+  const userRoles = user?.roles;
 
   const currentPath = location.pathname;
 
@@ -25,6 +28,14 @@ export default function Sidebar() {
       <div className="side-container flex flex-col w-[300px] border-r min-h-screen ml-4 mt-4 fixed ">
         <div className="flex flex-col mt-6">
           {routes.map((route) => {
+            const isRoleMatch = route.role.some(
+              (role) => userRoles && userRoles.includes(role),
+            );
+
+            if (!isRoleMatch) {
+              return null;
+            }
+
             return (
               <p className="flex items-center mt-4 leading-9">
                 <Link

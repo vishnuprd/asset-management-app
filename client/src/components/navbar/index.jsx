@@ -6,7 +6,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    navigate('/admin/login');
+    navigate('/');
   };
 
   return (

@@ -15,6 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/', userRoutes);
 
+app.use('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 app.use('/assets', verifyToken, assetRoutes);
 
 const clientOptions = {

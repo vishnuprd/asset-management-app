@@ -1,7 +1,7 @@
 import React from 'react';
 import Logo from '../../assests/logo.jpg';
 import { useNavigate } from 'react-router-dom';
-import Company from "../../assests/company.png"
+import Company from '../../assests/company.png';
 export default function Loginpage() {
   const navigate = useNavigate();
 
@@ -20,16 +20,19 @@ export default function Loginpage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:4500/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/admin/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+          }),
         },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-        }),
-      });
+      );
 
       const data = await response.json();
       console.log('response', response);
@@ -38,7 +41,8 @@ export default function Loginpage() {
       } else {
         localStorage.setItem('user', JSON.stringify(data));
         alert('login successful');
-        navigate('/dashboard');
+        // navigate('/dashboard');
+        window.location.href = '/dashboard';
       }
 
       const responseData = await response.json();
@@ -63,11 +67,10 @@ export default function Loginpage() {
         </div>
         <div className="w-1/2">
           <form
-          
             className="flex flex-col items-center w-[350px]"
             onSubmit={handleSubmit}
           >
-             <img src={Company} alt="Sample" className="w-[100px]" />
+            <img src={Company} alt="Sample" className="w-[100px]" />
             <p className="mb-4 text-2xl font-bold">Welcome to the Admin Page</p>
             <input
               type="text"

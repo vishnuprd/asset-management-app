@@ -1,14 +1,13 @@
-import React from "react";
-import Page from "../../assests/page.jpg";
-import { useNavigate } from "react-router-dom";
-import Company from "../../assests/company.png"
-
+import React from 'react';
+import Page from '../../assests/page.jpg';
+import Company from '../../assests/company.png';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 export default function Loginin() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = React.useState({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
 
   const handleChange = (e) => {
@@ -19,44 +18,46 @@ export default function Loginin() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch("http://localhost:4500/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: formData.username,
-        password: formData.password,
-      }),
-    });
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/user/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+          }),
+        },
+      );
+      console.log('response:', response);
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(`Login failed: ${response.statusText}`);
-    } else {
-      alert("Login successful");
-      navigate("/dashboard");
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.statusText}`);
+      } else {
+        localStorage.setItem('user', JSON.stringify(data));
+
+        setFormData({
+          username: '',
+          password: '',
+        });
+        alert('Login successful');
+        navigate('/dashboard');
+        // window.location.href = '/dashboard';
+      }
+    } catch (error) {
+      console.error('Error during login:', error.message);
     }
-
-    const responseData = await response.json();
-    console.log("Server Response:", responseData);
-
-    setFormData({
-      username: "",
-      password: "",
-    });
-  } catch (error) {
-    console.error("Error during login:", error.message);
-  }
-};
-
- 
+  };
 
   return (
     <>
       <div>
-        <div className="flex justify-between items-center h-screen mx-auto p-4 border rounded shadow-md">
+        <div className="flex items-center justify-between h-screen p-4 mx-auto border rounded shadow-md">
           <div className="w-1/4 ml-[180px]">
             <img src={Page} alt="Sample" className="w-full h-auto" />
           </div>
@@ -66,7 +67,7 @@ export default function Loginin() {
               onSubmit={handleSubmit}
             >
               <img src={Company} alt="Sample" className="w-[100px]" />
-              <p className="text-2xl font-bold mb-4">
+              <p className="mb-4 text-2xl font-bold">
                 Log In Into Your Account
               </p>
 
@@ -99,7 +100,14 @@ export default function Loginin() {
             <div>
               <p className="text-sm">
                 Don't have an account yet? Let's get
-                <a className="text-blue-500 hover:text-blue-700" href="/user/signup"> started here</a>.
+                <a
+                  className="text-blue-500 hover:text-blue-700"
+                  href="/user/signup"
+                >
+                  {' '}
+                  started here
+                </a>
+                .
               </p>
             </div>
           </div>

@@ -19,8 +19,7 @@ export default function Landingpage() {
         src={Banner}
         alt="Home-Image"
         id="home-image"
-        className="absolute inset-0 object-cover w-full h-full object-right"
-
+        className="absolute inset-0 object-cover object-right w-full h-full"
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="p-1 bg-gray-100 border rounded shadow-md radio-inputs w-72">

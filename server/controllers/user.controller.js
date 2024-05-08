@@ -5,28 +5,27 @@ const bcrypt = require('bcrypt');
 exports.adminCreate = async (req, res) => {
   const { username, email, password } = req.body;
 
-if (!username || !email || !password) {
-  return res.status(400).json({ message: 'Please enter all fields' });
-}
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'Please enter all fields' });
+  }
 
-const user = await User.findOne({ username });
+  const user = await User.findOne({ username });
 
-if (user) {
-  return res.status(400).json({ message: 'User already exists' });
-}
+  if (user) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
 
-const newUser = new User({
-  username,
-  email,
-  password,
-  roles: ['admin'],
-});
+  const newUser = new User({
+    username,
+    email,
+    password,
+    roles: ['admin'],
+  });
 
-await newUser.save();
+  await newUser.save();
 
-res.status(201).json({ message: 'User created successfully' });
+  res.status(201).json({ message: 'User created successfully' });
 };
-
 
 exports.adminLogin = async (req, res) => {
   const { username, password } = req.body;
@@ -60,8 +59,6 @@ exports.adminLogin = async (req, res) => {
 
   res.status(200).json({ token });
 };
-
-
 
 exports.userLogin = async (req, res) => {
   const { username, password } = req.body;
@@ -98,7 +95,6 @@ exports.userLogin = async (req, res) => {
   res.status(200).json({ token });
 };
 
-
 exports.userSignup = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -114,14 +110,36 @@ exports.userSignup = async (req, res) => {
     return res.status(400).json({ message: 'User already exists' });
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const newUser = new User({
     username,
     email,
-    password,
+    password: hashedPassword,
     roles: ['user'],
   });
 
   await newUser.save();
 
   res.status(201).json({ message: 'User created successfully' });
+};
+
+exports.getUsers = async (req, res) => {
+  const user = req.user;
+
+  if (!user.roles.includes('admin')) {
+    return res.status(403).json({ message: 'Unauthorized' });
+  }
+
+  const users = await User.find();
+
+  // filter out admin users
+  const filteredUsers = users.filter((user) => !user.roles.includes('admin'));
+
+  // remove password field from response
+  const filteredUsersWithoutPassword = filteredUsers.map((user) => {
+    const { password, ...filteredUser } = user._doc;
+    return filteredUser;
+  });
+  res.status(200).json(filteredUsersWithoutPassword);
 };
