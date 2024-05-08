@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Navbar() {
+export default function Navbar({ user }) {
+  console.log('user:', user);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,7 +21,9 @@ export default function Navbar() {
         <div className="dropdown dropdown-end">
           <button className="avatar online placeholder">
             <div className="bg-neutral text-neutral-content rounded-full w-12 mr-[10px]">
-              <span className="text-xl">AI</span>
+              <span className="text-xl">
+                {user && user.username.toUpperCase().charAt(0)}
+              </span>
             </div>
           </button>
           <ul className="shadow menu dropdown-content bg-base-100 rounded-box w-52">

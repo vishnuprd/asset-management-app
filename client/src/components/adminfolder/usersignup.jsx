@@ -36,12 +36,14 @@ export default function Usersignup() {
         },
       );
       const data = await response.json();
+      console.log('user', data);
       if (!response.ok) {
         throw new Error('Registration failed');
       } else {
         localStorage.setItem('user', JSON.stringify(data));
         alert('Registration successful');
-        navigate('/dashboard');
+        // navigate('/dashboard');
+        window.location.href = '/dashboard';
       }
 
       const responseData = await response.json();

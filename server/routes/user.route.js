@@ -4,14 +4,13 @@ const {
   userLogin,
   userSignup,
   getUsers,
+  getUser,
 } = require('../controllers/user.controller');
 const verifyToken = require('../utils/vertify-token');
 
 const router = require('express').Router();
 
-router.get('/get-user', verifyToken, (req, res) => {
-  res.send(req.user);
-});
+router.get('/get-user', verifyToken, getUser);
 
 router.get('/users', verifyToken, getUsers);
 

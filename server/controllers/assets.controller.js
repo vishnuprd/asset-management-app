@@ -1,4 +1,5 @@
 const Assets = require('../models/assets.model');
+const User = require('../models/user.model');
 exports.getAssets = async (req, res) => {
   // get jwt token from header
 
@@ -8,11 +9,31 @@ exports.getAssets = async (req, res) => {
   if (user.roles.includes('admin')) {
     const assets = await Assets.find();
 
-    return res.status(200).json(assets);
+    // match user id with assets userId
+    const assetsWithUser = await Promise.all(
+      assets.map(async (asset) => {
+        const user = await User.findById(asset.userId);
+        return {
+          ...asset._doc,
+          userName: user.username,
+        };
+      }),
+    );
+
+    return res.status(200).json(assetsWithUser);
   } else if (user.roles.includes('user')) {
     const assets = await Assets.find({ userId: user.id });
 
-    return res.status(200).json(assets);
+    const user = await User.findById(user.id);
+
+    const assetsWithUser = assets.map((asset) => {
+      return {
+        ...asset._doc,
+        userName: user.username,
+      };
+    });
+
+    return res.status(200).json(assetsWithUser);
   }
 };
 

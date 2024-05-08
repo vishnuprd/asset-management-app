@@ -37,7 +37,7 @@ export default function Loginin() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`Login failed: ${response.statusText}`);
+        throw new Error(data.message);
       } else {
         localStorage.setItem('user', JSON.stringify(data));
 
@@ -46,10 +46,12 @@ export default function Loginin() {
           password: '',
         });
         alert('Login successful');
-        navigate('/dashboard');
-        // window.location.href = '/dashboard';
+        // navigate('/dashboard');
+        window.location.href = '/dashboard';
       }
     } catch (error) {
+      const errMessage = error.message;
+      alert(errMessage);
       console.error('Error during login:', error.message);
     }
   };

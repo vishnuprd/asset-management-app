@@ -120,8 +120,18 @@ exports.userSignup = async (req, res) => {
   });
 
   await newUser.save();
+  const payload = {
+    user: {
+      id: newUser._id,
+      roles: newUser.roles,
+    },
+  };
 
-  res.status(201).json({ message: 'User created successfully' });
+  const token = jwt.sign(payload, process.env.SECRET_KEY, {
+    expiresIn: '1h',
+  });
+
+  res.status(200).json({ token });
 };
 
 exports.getUsers = async (req, res) => {
@@ -142,4 +152,16 @@ exports.getUsers = async (req, res) => {
     return filteredUser;
   });
   res.status(200).json(filteredUsersWithoutPassword);
+};
+
+exports.getUser = async (req, res) => {
+  const user = req.user;
+
+  const dbUser = await User.findById(user.id);
+
+  const userWithoutPassword = { ...dbUser._doc };
+
+  delete userWithoutPassword.password;
+
+  res.status(200).json(userWithoutPassword);
 };

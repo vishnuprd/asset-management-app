@@ -6,6 +6,7 @@ import { getUser } from '../../lib/get-user.js';
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [usersForAdmin, setUsersForAdmin] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [newAsset, setNewAsset] = useState({
     employeeId: '',
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const [tableData, setTableData] = useState([]);
 
   const fetchUser = async () => {
+    setIsLoading(true);
     const user = await getUser();
 
     // check if user is an admin
@@ -24,8 +26,9 @@ export default function Dashboard() {
       console.log('users', users);
       setUsersForAdmin(users);
     }
-
+    console.log('Dashboard user', user);
     setUser(user);
+    setIsLoading(false);
   };
 
   const getAllUsers = async () => {
@@ -50,6 +53,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    getAssets();
   }, []);
 
   const toggleForm = () => {
@@ -81,10 +88,6 @@ export default function Dashboard() {
     });
     setShowForm(false);
   };
-
-  useEffect(() => {
-    getAssets();
-  }, []);
 
   const getAssets = async () => {
     try {
@@ -139,7 +142,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <Sidebar user={user} />
       <div id="dashboard" className="home-container flex flex-col ml-[360px] ">
         {user && user.roles.includes('admin') && (
@@ -269,7 +272,7 @@ export default function Dashboard() {
           <table className="table">
             <thead>
               <tr>
-                <th>Employee ID</th>
+                <th>Employee Name</th>
                 <th>Asset Name</th>
                 <th>Description</th>
                 <th>Category</th>
@@ -278,7 +281,7 @@ export default function Dashboard() {
             <tbody>
               {tableData.map((asset, index) => (
                 <tr key={index}>
-                  <td>{asset._id}</td>
+                  <td>{asset.userName}</td>
                   <td>{asset.name}</td>
                   <td>{asset.description}</td>
                   <td>{asset.category}</td>
