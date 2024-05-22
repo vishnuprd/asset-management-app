@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch(${process.env.REACT_APP_API_URL}/users, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
         headers: {
           Authorization:
             'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
@@ -102,7 +102,7 @@ export default function Dashboard() {
 
   const getAssets = async () => {
     try {
-      const response = await fetch(${process.env.REACT_APP_API_URL}/assets, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/assets`, {
         headers: {
           Authorization:
             'Bearer ' + JSON.parse(localStorage.getItem('user')).token,
@@ -121,7 +121,7 @@ export default function Dashboard() {
   const postAsset = async (payload) => {
     try {
       const response = await fetch(
-        ${process.env.REACT_APP_API_URL}/assets/create,
+       ` ${process.env.REACT_APP_API_URL}/assets/create`,
         {
           method: 'POST',
           headers: {
